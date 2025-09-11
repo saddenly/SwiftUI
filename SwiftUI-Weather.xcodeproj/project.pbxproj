@@ -30,9 +30,24 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		D142E0512E4BD16A00258A67 /* SwiftUI-Weather */ = {
+		D107AA0A2E7228BE0030633C /* App */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = "SwiftUI-Weather";
+			path = App;
+			sourceTree = "<group>";
+		};
+		D10F4F4F2E721CBE00E3312E /* Domain */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Domain;
+			sourceTree = "<group>";
+		};
+		D10F4F592E721DEB00E3312E /* Data */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Data;
+			sourceTree = "<group>";
+		};
+		D10F4F632E7223AF00E3312E /* Presentation */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Presentation;
 			sourceTree = "<group>";
 		};
 		D142E05F2E4BD16C00258A67 /* SwiftUI-WeatherTests */ = {
@@ -75,7 +90,10 @@
 		D142E0462E4BD16A00258A67 = {
 			isa = PBXGroup;
 			children = (
-				D142E0512E4BD16A00258A67 /* SwiftUI-Weather */,
+				D107AA0A2E7228BE0030633C /* App */,
+				D10F4F632E7223AF00E3312E /* Presentation */,
+				D10F4F592E721DEB00E3312E /* Data */,
+				D10F4F4F2E721CBE00E3312E /* Domain */,
 				D142E05F2E4BD16C00258A67 /* SwiftUI-WeatherTests */,
 				D142E0692E4BD16C00258A67 /* SwiftUI-WeatherUITests */,
 				D142E0502E4BD16A00258A67 /* Products */,
@@ -108,7 +126,10 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				D142E0512E4BD16A00258A67 /* SwiftUI-Weather */,
+				D107AA0A2E7228BE0030633C /* App */,
+				D10F4F4F2E721CBE00E3312E /* Domain */,
+				D10F4F592E721DEB00E3312E /* Data */,
+				D10F4F632E7223AF00E3312E /* Presentation */,
 			);
 			name = "SwiftUI-Weather";
 			packageProductDependencies = (
@@ -178,6 +199,7 @@
 					};
 					D142E05B2E4BD16C00258A67 = {
 						CreatedOnToolsVersion = 16.4;
+						LastSwiftMigration = 1640;
 						TestTargetID = D142E04E2E4BD16A00258A67;
 					};
 					D142E0652E4BD16C00258A67 = {
@@ -395,6 +417,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5ZBU54N9SJ;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -422,6 +445,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5ZBU54N9SJ;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -446,14 +470,18 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5ZBU54N9SJ;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.rustem.SwiftUI-WeatherTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_OBJC_BRIDGING_HEADER = "SwiftUI-WeatherTests/SwiftUI-WeatherTests-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SwiftUI-Weather.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/SwiftUI-Weather";
@@ -464,14 +492,17 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5ZBU54N9SJ;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.rustem.SwiftUI-WeatherTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_OBJC_BRIDGING_HEADER = "SwiftUI-WeatherTests/SwiftUI-WeatherTests-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SwiftUI-Weather.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/SwiftUI-Weather";
@@ -483,6 +514,7 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5ZBU54N9SJ;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.rustem.SwiftUI-WeatherUITests";
@@ -499,6 +531,7 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5ZBU54N9SJ;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.rustem.SwiftUI-WeatherUITests";
