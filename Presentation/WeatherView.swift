@@ -13,39 +13,69 @@ struct WeatherView: View {
     let latitude: Double
     let longitude: Double
     
+    @ViewBuilder
+    private var content: some View {
+        switch viewModel.state {
+        case .idle, .loading:
+            ProgressView()
+        case .loaded(let cityName, let cityTemperature, _):
+            WeatherContentView(isNight: $isNight,
+                               cityName: cityName,
+                               cityTemperature: cityTemperature)
+        case .error(let msg):
+            Text(msg)
+        }
+    }
+    
     var body: some View {
+        content
+            .task {
+                await viewModel.load(latitude: latitude, longitude: longitude)
+            }
+            .refreshable {
+                await viewModel.load(latitude: latitude, longitude: longitude)
+            }
+    }
+}
 
-            switch viewModel.state {
-            case .idle, .loading:
-                ProgressView().task {await viewModel.load(latitude: latitude, longitude: longitude)}
-            case .loaded(let cityName, let cityTemperature, _):
-                ZStack {
-                    BackgroundView(isNight: $isNight)
-                    
-                    VStack {
-                        CityTextView(cityName: cityName)
-                        
-                        MainWeatherStatusView(imageName: isNight ? "moon.stars.fill" : "cloud.sun.fill", temperature: cityTemperature)
-                        .padding(.bottom, 40)
-                        
-                        Spacer()
-                        
-                        Button {
-                            isNight.toggle()
-                        } label: {
-                            WeatherButton(title: "Change Day Time",
-                                          textColor: .blue,
-                                          backgroundColor: .white)
-                        }
-                        
-                        Spacer()
-                    }
+struct WeatherContentView: View {
+    @Binding var isNight: Bool
+    let cityName: String
+    let cityTemperature: String
+    
+    var body: some View {
+        ZStack {
+            BackgroundView(isNight: $isNight)
+            
+            VStack {
+                Spacer()
+                
+                CityTextView(cityName: cityName)
+                
+                MainWeatherStatusView(imageName: isNight ? "moon.stars.fill" : "cloud.sun.fill",
+                                      temperature: cityTemperature)
+                    .padding(.bottom, 40)
+                
+                Button {
+                    isNight.toggle()
+                } label: {
+                    WeatherButton(title: "Change Day Time",
+                                  textColor: .blue,
+                                  backgroundColor: .white)
                 }
-            case .error(let msg):
-                VStack(spacing: 12) {
-                    Text(msg)
-                    Button("Retry") {Task {await viewModel.load(latitude: latitude, longitude: longitude)}}
-                }
+                
+                Spacer()
             }
         }
+    }
+}
+
+struct ErrorView: View {
+    let errorMessage: String
+    
+    var body: some View {
+        VStack(spacing: 12) {
+            Text(errorMessage)
+        }
+    }
 }
