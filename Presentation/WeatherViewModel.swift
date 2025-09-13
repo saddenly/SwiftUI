@@ -38,7 +38,7 @@ final class WeatherViewModel: ObservableObject {
             }
 
             while !Task.isCancelled {
-                try? await Task.sleep(nanoseconds: intervalSeconds * 1_000_000)
+                try? await Task.sleep(nanoseconds: intervalSeconds * 1_000_000_000)
 
                 if case .error = self.state { break }
 
