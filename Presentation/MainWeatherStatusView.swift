@@ -7,12 +7,12 @@
 
 import SwiftUI
 
-struct MainWeatherStatusView : View {
-    
+struct MainWeatherStatusView: View {
+
     var imageName: String
     var temperature: String
-    
-    
+    var updatedAt: String
+
     var body: some View {
         VStack(spacing: 8) {
             Image(systemName: imageName)
@@ -20,9 +20,13 @@ struct MainWeatherStatusView : View {
                 .resizable()
                 .aspectRatio(contentMode: .fit)
                 .frame(width: 180, height: 180)
-            
+
             Text(temperature)
                 .font(.system(size: 70, weight: .medium))
+                .foregroundColor(.white)
+
+            Text("Last updated: \(updatedAt)")
+                .font(.system(size: 16, weight: .light))
                 .foregroundColor(.white)
         }
     }

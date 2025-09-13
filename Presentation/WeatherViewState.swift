@@ -8,6 +8,6 @@
 enum WeatherViewState {
     case idle
     case loading
-    case loaded(cityName: String, cityTemperature: String)
+    case loaded(cityName: String, cityTemperature: String, updatedAt: String)
     case error(message: String)
 }

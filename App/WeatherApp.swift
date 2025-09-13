@@ -15,7 +15,11 @@ struct WeatherApp: App {
             let api = WeatherAPICLient(baseURL: baseUrl)
             let repo = WeatherRepositoryImpl(api: api)
             let useCase = FetchWeatherUseCase(repository: repo)
-            let viewModel = WeatherViewModel(fetchWeather: useCase, tempFormatter: TemperatureFormatterCelsius())
+            let viewModel = WeatherViewModel(
+                fetchWeather: useCase,
+                tempFormatter: TemperatureFormatterCelsius(),
+                dateFormatter: UnixDateFormatter()
+            )
             WeatherView(viewModel: viewModel, latitude: 50.03, longitude: 22.00)
         }
     }

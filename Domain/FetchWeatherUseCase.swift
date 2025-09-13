@@ -7,12 +7,17 @@
 
 public struct FetchWeatherUseCase {
     private let repository: WeatherRepository
-    
+
     public init(repository: WeatherRepository) {
         self.repository = repository
     }
-    
-    public func execute(latitude: Double, longitude: Double) async throws -> Weather {
-        try await repository.currentWeather(latitude: latitude, longitude: longitude)
+
+    public func execute(latitude: Double, longitude: Double) async throws
+        -> Weather
+    {
+        try await repository.currentWeather(
+            latitude: latitude,
+            longitude: longitude
+        )
     }
 }

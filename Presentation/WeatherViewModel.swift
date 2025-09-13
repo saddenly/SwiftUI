@@ -12,15 +12,18 @@ final class WeatherViewModel: ObservableObject {
     @Published private(set) var state: WeatherViewState = .idle
     private let fetchWeather: FetchWeatherUseCase
     private let tempFormatter: TemperatureFormatting
+    private let dateFormatter: DateFormatting
     private let intervalSeconds: UInt64
     private var pollTask: Task<Void, Never>?
 
     init(
         fetchWeather: FetchWeatherUseCase,
-        tempFormatter: TemperatureFormatting
+        tempFormatter: TemperatureFormatting,
+        dateFormatter: DateFormatting
     ) {
         self.fetchWeather = fetchWeather
         self.tempFormatter = tempFormatter
+        self.dateFormatter = dateFormatter
         self.intervalSeconds = 10
     }
 
@@ -38,7 +41,9 @@ final class WeatherViewModel: ObservableObject {
             }
 
             while !Task.isCancelled {
-                try? await Task.sleep(nanoseconds: intervalSeconds * 1_000_000_000)
+                try? await Task.sleep(
+                    nanoseconds: intervalSeconds * 1_000_000_000
+                )
 
                 if case .error = self.state { break }
 
@@ -66,7 +71,8 @@ final class WeatherViewModel: ObservableObject {
             state = .loaded(
                 cityName: weather.cityName,
                 cityTemperature:
-                    "\(tempFormatter.string(fromCelsius: weather.temperatureCelsius))"
+                    "\(tempFormatter.string(fromCelsius: weather.temperatureCelsius))",
+                updatedAt: "\(dateFormatter.string(fromDate: weather.time))"
             )
         } catch {
             state = .error(message: humanReadableMessage(error))
@@ -89,9 +95,11 @@ final class WeatherViewModel: ObservableObject {
             let cityName = w.cityName
             let cityTemperature =
                 "\(tempFormatter.string(fromCelsius: w.temperatureCelsius))"
+            let updatedAt = "\(dateFormatter.string(fromDate: w.time))"
             state = .loaded(
                 cityName: cityName,
-                cityTemperature: cityTemperature
+                cityTemperature: cityTemperature,
+                updatedAt: updatedAt
             )
         } catch {
             state = .error(message: "Failed to load weather")

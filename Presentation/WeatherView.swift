@@ -18,11 +18,12 @@ struct WeatherView: View {
         switch viewModel.state {
         case .idle, .loading:
             ProgressView()
-        case .loaded(let cityName, let cityTemperature):
+        case .loaded(let cityName, let cityTemperature, let updatedAt):
             WeatherContentView(
                 isNight: $isNight,
                 cityName: cityName,
-                cityTemperature: cityTemperature
+                cityTemperature: cityTemperature,
+                updatedAt: updatedAt
             )
         case .error(let msg):
             Text(msg)
@@ -53,6 +54,7 @@ struct WeatherContentView: View {
     @Binding var isNight: Bool
     let cityName: String
     let cityTemperature: String
+    let updatedAt: String
 
     var body: some View {
         ZStack {
@@ -65,7 +67,8 @@ struct WeatherContentView: View {
 
                 MainWeatherStatusView(
                     imageName: isNight ? "moon.stars.fill" : "cloud.sun.fill",
-                    temperature: cityTemperature
+                    temperature: cityTemperature,
+                    updatedAt: updatedAt
                 )
                 .padding(.bottom, 40)
 
