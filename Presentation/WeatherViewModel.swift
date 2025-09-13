@@ -12,20 +12,87 @@ final class WeatherViewModel: ObservableObject {
     @Published private(set) var state: WeatherViewState = .idle
     private let fetchWeather: FetchWeatherUseCase
     private let tempFormatter: TemperatureFormatting
-    
-    init(fetchWeather: FetchWeatherUseCase, tempFormatter: TemperatureFormatting) {
+    private let intervalSeconds: UInt64
+    private var pollTask: Task<Void, Never>?
+
+    init(
+        fetchWeather: FetchWeatherUseCase,
+        tempFormatter: TemperatureFormatting
+    ) {
         self.fetchWeather = fetchWeather
         self.tempFormatter = tempFormatter
+        self.intervalSeconds = 10
     }
-    
+
+    func startPolling(
+        immediate: Bool = true,
+        latitude: Double,
+        longitude: Double
+    ) {
+        pollTask?.cancel()
+
+        pollTask = Task { [weak self] in
+            guard let self else { return }
+            if immediate {
+                await self.fetchOnce(latitude: latitude, longitude: longitude)
+            }
+
+            while !Task.isCancelled {
+                try? await Task.sleep(nanoseconds: intervalSeconds * 1_000_000)
+
+                if case .error = self.state { break }
+
+                await self.fetchOnce(latitude: latitude, longitude: longitude)
+            }
+        }
+    }
+
+    func stopPolling() {
+        pollTask?.cancel()
+        pollTask = nil
+    }
+
+    func retry(latitude: Double, longitude: Double) {
+        state = .loading
+        startPolling(immediate: true, latitude: latitude, longitude: longitude)
+    }
+
+    private func fetchOnce(latitude: Double, longitude: Double) async {
+        do {
+            let weather = try await fetchWeather.execute(
+                latitude: latitude,
+                longitude: longitude
+            )
+            state = .loaded(
+                cityName: weather.cityName,
+                cityTemperature:
+                    "\(tempFormatter.string(fromCelsius: weather.temperatureCelsius))"
+            )
+        } catch {
+            state = .error(message: humanReadableMessage(error))
+            stopPolling()
+        }
+    }
+
+    private func humanReadableMessage(_ error: Error) -> String {
+        (error as? URLError)?.code == .notConnectedToInternet
+            ? "No internet connection" : error.localizedDescription
+    }
+
     func load(latitude: Double, longitude: Double) async {
         state = .loading
         do {
-            let w = try await fetchWeather.execute(latitude: latitude, longitude: longitude)
+            let w = try await fetchWeather.execute(
+                latitude: latitude,
+                longitude: longitude
+            )
             let cityName = w.cityName
-            let cityTemperature = "\(tempFormatter.string(fromCelsius: w.temperatureCelsius))"
-            let weatherIcon = w.temperatureCelsius < 0 ? "❄️" : "☀️"
-            state = .loaded(cityName: cityName, cityTemperature: cityTemperature, weatherIcon: weatherIcon)
+            let cityTemperature =
+                "\(tempFormatter.string(fromCelsius: w.temperatureCelsius))"
+            state = .loaded(
+                cityName: cityName,
+                cityTemperature: cityTemperature
+            )
         } catch {
             state = .error(message: "Failed to load weather")
         }
