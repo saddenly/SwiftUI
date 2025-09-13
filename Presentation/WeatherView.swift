@@ -24,6 +24,7 @@ struct WeatherView: View {
                                cityTemperature: cityTemperature)
         case .error(let msg):
             Text(msg)
+            Button("Retry") { Task {await viewModel.load(latitude: latitude, longitude: longitude)}}
         }
     }
     
