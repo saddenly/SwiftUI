@@ -19,4 +19,16 @@ final class WeatherViewModelTests: XCTestCase {
     struct TempFormatStub: TemperatureFormatting {func string(fromCelsius c: Double) -> String {
         "20C"
     }}
+    struct DateFormatStub: DateFormatting { func string(fromDate date: Date) -> String {
+        "09:55:04"
+    }}
+    
+    func test_load_success() async {
+        let weather = Weather(temperatureCelsius: 20, cityName: "Rzeszow", time: Date())
+        let useCase = FetchWeatherUseCase(repository: RepoStub(weather: weather))
+        let viewModel = WeatherViewModel(fetchWeather: useCase, tempFormatter: TempFormatStub(), dateFormatter: DateFormatStub())
+        
+        viewModel.startPolling(latitude: 50.03, longitude: 22.00)
+        XCTAssertEqual(viewModel.state, .loaded(cityName: "Rzeszow", cityTemperature: "20C", updatedAt: "09:55:04"))
+    }
 }

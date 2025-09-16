@@ -20,7 +20,8 @@ struct WeatherApp: App {
                 tempFormatter: TemperatureFormatterCelsius(),
                 dateFormatter: UnixDateFormatter()
             )
-            WeatherView(viewModel: viewModel, latitude: 50.03, longitude: 22.00)
+            //Rzeszow's coordinates
+            WeatherView(viewModel: viewModel, latitude: 50.03, longitude: 22.00).environmentObject(NetworkMonitor())
         }
     }
 }

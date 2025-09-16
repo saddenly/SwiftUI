@@ -17,7 +17,7 @@ final class FetchWeatherUseCaseTests: XCTestCase {
     }
     
     func test_ReturnsWeather() async throws {
-        let expected = Weather(temperatureCelsius: 20, cityName: "Warsaw")
+        let expected = Weather(temperatureCelsius: 20, cityName: "Warsaw", time: Date())
         let sut = FetchWeatherUseCase(repository: RepoStub(result: .success(expected)))
         let w = try await sut.execute(latitude: 20, longitude: 20.5)
         XCTAssertEqual(w, expected)

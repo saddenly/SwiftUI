@@ -10,6 +10,7 @@ import SwiftUI
 @MainActor
 final class WeatherViewModel: ObservableObject {
     @Published private(set) var state: WeatherViewState = .idle
+    @Published var showNoInternetAlert = false
     private let fetchWeather: FetchWeatherUseCase
     private let tempFormatter: TemperatureFormatting
     private let dateFormatter: DateFormatting
@@ -58,6 +59,7 @@ final class WeatherViewModel: ObservableObject {
     }
 
     func retry(latitude: Double, longitude: Double) {
+        showNoInternetAlert = false
         state = .loading
         startPolling(immediate: true, latitude: latitude, longitude: longitude)
     }
@@ -75,7 +77,12 @@ final class WeatherViewModel: ObservableObject {
                 updatedAt: "\(dateFormatter.string(fromDate: weather.time))"
             )
         } catch {
-            state = .error(message: humanReadableMessage(error))
+            if let urlErr = error as? URLError, urlErr.code == .notConnectedToInternet {
+                showNoInternetAlert = true
+                state = .error(message: "Please check your internet connection")
+            } else {
+                state = .error(message: humanReadableMessage(error))
+            }
             stopPolling()
         }
     }
@@ -83,26 +90,5 @@ final class WeatherViewModel: ObservableObject {
     private func humanReadableMessage(_ error: Error) -> String {
         (error as? URLError)?.code == .notConnectedToInternet
             ? "No internet connection" : error.localizedDescription
-    }
-
-    func load(latitude: Double, longitude: Double) async {
-        state = .loading
-        do {
-            let w = try await fetchWeather.execute(
-                latitude: latitude,
-                longitude: longitude
-            )
-            let cityName = w.cityName
-            let cityTemperature =
-                "\(tempFormatter.string(fromCelsius: w.temperatureCelsius))"
-            let updatedAt = "\(dateFormatter.string(fromDate: w.time))"
-            state = .loaded(
-                cityName: cityName,
-                cityTemperature: cityTemperature,
-                updatedAt: updatedAt
-            )
-        } catch {
-            state = .error(message: "Failed to load weather")
-        }
     }
 }
